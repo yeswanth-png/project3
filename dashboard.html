@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard - Hospital Management System</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Appointments</h1>
+    <div id="appointmentsList">
+      <!-- Appointments will be inserted here -->
+    </div>
+  </div>
+
+  <script>
+    async function loadAppointments() {
+      try {
+        const response = await fetch('http://localhost:3000/api/appointments');
+        const data = await response.json();
+
+        const listContainer = document.getElementById('appointmentsList');
+        listContainer.innerHTML = '';
+
+        if (!data.length) {
+          listContainer.innerHTML = '<p>No appointments found.</p>';
+          return;
+        }
+
+        data.forEach(appt => {
+          const item = document.createElement('div');
+          item.className = 'appointment-item';
+          item.innerHTML = `
+            <p><strong>Welcome, ${appt.patientName}!</strong></p>
+            <p><strong>Doctor:</strong> ${appt.doctor}</p>
+            <p><strong>Specialization:</strong> ${appt.specialization}</p>
+            <p><strong>Appointment Date:</strong> ${new Date(appt.appointmentDate).toLocaleString()}</p>
+            <p><strong>Thank you for choosing us!</strong></p>
+            <p><a href="index.html">Logout</a></p>
+            <hr />
+          `;
+          listContainer.appendChild(item);
+        });
+      } catch (err) {
+        console.error('Error loading appointments:', err);
+        document.getElementById('appointmentsList').innerHTML = '<p>Failed to load appointments.</p>';
+      }
+    }
+
+    loadAppointments();
+  </script>
+</body>
+</html>

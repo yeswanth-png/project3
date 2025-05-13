@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Doctor Login - Hospital Management System</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+    }
+
+    .container {
+      max-width: 400px;
+      margin: auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+    }
+
+    input, button {
+      width: 100%;
+      margin: 10px 0;
+      padding: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Doctor Login</h2>
+    <form id="doctorLoginForm">
+      <input type="email" id="doctorEmail" placeholder="Doctor's Email" required />
+      <input type="password" id="doctorPassword" placeholder="Password" required />
+      <button type="submit">Login</button>
+      <p><a href="doctor-register.html">Doctor-registration</a></p>
+    </form>
+  </div>
+
+  <script>
+    const doctorLoginForm = document.getElementById('doctorLoginForm');
+
+    doctorLoginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const email = document.getElementById('doctorEmail').value.trim();
+      const password = document.getElementById('doctorPassword').value;
+
+      try {
+        const response = await fetch('http://localhost:3000/api/doctor/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password }),
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+          alert('Login successful!');
+          window.location.href = `doctor-dashboard.html?doctorId=${result.doctorId}`;
+        } else {
+          alert(result.message || 'Login failed');
+        }
+      } catch (err) {
+        alert('Error connecting to the server.');
+      }
+    });
+  </script>
+</body>
+</html>

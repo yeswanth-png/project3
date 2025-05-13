@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Doctor Dashboard - Hospital Management System</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 10px;
+      text-align: left;
+      border: 1px solid #ccc;
+    }
+
+    h2 {
+      text-align: center;
+    }
+
+    .appointments {
+      margin-top: 20px;
+    }
+
+    .appointments table {
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Doctor Dashboard</h2>
+    <div class="appointments">
+      <h3>Your Appointments</h3>
+      <table id="appointmentsTable">
+        <thead>
+          <tr>
+            <th>Patient Name</th>
+            <th>Appointment Date</th>
+            <th>Specialization</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Appointment data will be inserted here -->
+           <p>TO see appointments click here <a href="appointment-success.html">Click here</a></p>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    // Get the doctorId from the URL query string
+    const urlParams = new URLSearchParams(window.location.search);
+    const doctorId = urlParams.get('doctorId');
+
+    // Fetch appointments for the logged-in doctor
+    async function fetchAppointments() {
+      try {
+        const response = await fetch(`http://localhost:3000/api/doctor/appointments/${doctorId}`);
+        const appointments = await response.json();
+
+        if (appointments.length > 0) {
+          const appointmentsTable = document.getElementById('appointmentsTable').getElementsByTagName('tbody')[0];
+          appointmentsTable.innerHTML = ''; // Clear existing appointments
+
+          appointments.forEach((appointment) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td>${appointment.patientName}</td>
+              <td>${new Date(appointment.appointmentDate).toLocaleString()}</td>
+              <td>${appointment.specialization}</td>
+            `;
+            appointmentsTable.appendChild(row);
+          });
+        } else {
+          alert('No appointments found for this doctor.');
+        }
+      } catch (err) {
+        alert('Error fetching appointments.');
+      }
+    }
+
+    // Fetch the doctor's appointments after the page loads
+    window.onload = fetchAppointments;
+  </script>
+</body>
+</html>

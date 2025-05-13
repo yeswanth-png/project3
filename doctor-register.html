@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Doctor Registration - Hospital Management System</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+    }
+
+    .container {
+      max-width: 400px;
+      margin: auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+    }
+
+    input, button {
+      width: 100%;
+      margin: 10px 0;
+      padding: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Doctor Registration</h2>
+    <form id="doctorRegisterForm">
+      <input type="text" id="doctorName" placeholder="Name" required />
+      <input type="email" id="doctorEmail" placeholder="Email" required />
+      <input type="password" id="doctorPassword" placeholder="Password" required />
+      <input type="text" id="doctorSpecialization" placeholder="Specialization" required />
+      <button type="submit">Register</button>
+    </form>
+  </div>
+
+  <script>
+    const doctorRegisterForm = document.getElementById('doctorRegisterForm');
+
+    doctorRegisterForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const name = document.getElementById('doctorName').value.trim();
+      const email = document.getElementById('doctorEmail').value.trim();
+      const password = document.getElementById('doctorPassword').value;
+      const specialization = document.getElementById('doctorSpecialization').value.trim();
+
+      try {
+        const response = await fetch('http://localhost:3000/api/doctor/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, password, specialization }),
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+          alert('Registration successful!');
+          window.location.href = 'doctor-login.html'; // Redirect to login page after registration
+        } else {
+          alert(result.message || 'Registration failed');
+        }
+      } catch (err) {
+        alert('Error connecting to the server.');
+      }
+    });
+  </script>
+</body>
+</html>

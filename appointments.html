@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book an Appointment - Hospital Management System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Book an Appointment</h1>
+        <form id="appointmentForm">
+            <input type="text" id="doctor" placeholder="Doctor's Name" required>
+            <input type="datetime-local" id="appointmentDate" required>
+            <button type="submit" class="btn">Book Appointment</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('appointmentForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const doctor = document.getElementById('doctor').value.trim();
+            const appointmentDate = document.getElementById('appointmentDate').value;
+
+            const response = await fetch('http://localhost:3000/api/appointments', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ doctor, appointmentDate })
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                window.location.href = "appointment-success.html";
+            } else {
+                alert(result.message || "Failed to book appointment");
+            }
+        });
+    </script>
+</body>
+</html>
